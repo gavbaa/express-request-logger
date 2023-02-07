@@ -10,7 +10,12 @@ const START = 'start';
 const END = 'end';
 
 export const auditRequest = function (req: AugmentedRequest, options: AuditOptions) {
-    const shouldAudit = utils.shouldAuditURL(options.excludeURLs, req);
+    let shouldAudit: boolean;
+    if (options.request.customShouldAuditFunc) {
+        shouldAudit = options.request.customShouldAuditFunc(options, req);
+    } else {
+        shouldAudit = utils.shouldAuditURL(options.excludeURLs, req);
+    }
 
     if (shouldAudit) {
         let request;
@@ -42,8 +47,13 @@ export const auditRequest = function (req: AugmentedRequest, options: AuditOptio
 export const auditResponse = function (req: AugmentedRequest, res: AugmentedResponse, options: AuditOptions) {
     var request;
     var response;
+    let shouldAudit: boolean;
+    if (options.response.customShouldAuditFunc) {
+        shouldAudit = options.response.customShouldAuditFunc(options, req, res);
+    } else {
+        shouldAudit = utils.shouldAuditURL(options.excludeURLs, req);
+    }
 
-    var shouldAudit = utils.shouldAuditURL(options.excludeURLs, req);
     if (shouldAudit) {
         if (options.setupFunc) {
             options.setupFunc(req, res);

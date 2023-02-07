@@ -160,6 +160,19 @@ describe('logger-helpers tests', function () {
                 });
             });
         });
+        describe('And customShouldAuditFunc is not empty', function () {
+            it('Should audit request if customShouldAuditFunc returns true', function () {
+                options.request.customShouldAuditFunc = () => { return true; };
+                loggerHelper.auditRequest(request, options);
+                sinon.assert.calledOnce(loggerInfoStub);
+            });
+
+            it('Should not audit request if customShouldAuditFunc returns false', function () {
+                options.request.customShouldAuditFunc = () => { return false; };
+                loggerHelper.auditRequest(request, options);
+                sinon.assert.notCalled(loggerInfoStub);
+            });
+        });
         describe('And additionalAudit is not empty', function () {
             beforeEach(function () {
                 request.additionalAudit = {

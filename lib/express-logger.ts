@@ -51,7 +51,11 @@ var audit: RequestHandler = function (req: AugmentedRequest, res: AugmentedRespo
     next();
 };
 
-export default function (options: Partial<AuditOptions>) {
+type DeepPartial<T> = {
+    [P in keyof T]?: T[P] extends object ? DeepPartial<T[P]> : T[P];
+};
+
+export default function (options: DeepPartial<AuditOptions>): RequestHandler {
     options = options || {};
     var defaults = {
         logger: logger,
@@ -87,7 +91,7 @@ export default function (options: Partial<AuditOptions>) {
 };
 
 // Convert all options fields that need to be array by default
-function validateArrayFields(options: Partial<AuditOptions>, defaults: Record<string, any>) {
+function validateArrayFields(options: DeepPartial<AuditOptions>, defaults: Record<string, any>) {
     let defaultsCopy = Object.assign({}, defaults);
     delete defaultsCopy.logger;
 

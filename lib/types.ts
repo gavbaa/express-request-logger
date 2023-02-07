@@ -18,6 +18,7 @@ export type AuditOptions = {
         excludeBody: string[];
         excludeHeaders: string[];
         customMaskBodyFunc: (req: AugmentedRequest) => any;
+        customShouldAuditFunc: (options: AuditOptions, req: AugmentedRequest) => boolean;
         maxBodyLength: number | undefined;
     };
     response: {
@@ -27,6 +28,7 @@ export type AuditOptions = {
         excludeBody: string[];
         excludeHeaders: string[];
         maxBodyLength: number | undefined;
+        customShouldAuditFunc: (options: AuditOptions, req: AugmentedRequest, res: AugmentedResponse) => boolean;
     };
     doubleAudit: boolean;
     excludeURLs: string[];
